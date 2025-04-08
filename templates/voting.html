@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote - School Voting System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="voting-container">
+            <div class="header">
+                <h1>School Voting System</h1>
+                <div class="user-info">
+                    <p>Welcome, <span class="user-name">{{ student_name }}</span> (ID: <span class="user-id">{{ student_id }}</span>)</p>
+                    <a href="/logout/" class="logout-btn">Logout</a>
+                </div>
+            </div>
+            
+            <div class="voting-progress">
+                <div class="progress-text">
+                    <span>Your Progress: {{ voted_count }} of {{ total_positions }} positions</span>
+                    <span class="percentage">{{ progress_percentage|floatformat:0 }}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress_percentage }}%;"></div>
+                </div>
+                <div class="position-indicators">
+                    {% for position in positions %}
+                    <div class="position-indicator {% if position.id in voted_positions %}completed{% endif %} {% if position.id == next_position.id %}current{% endif %}" data-position-id="{{ position.id }}">
+                        <div class="indicator-dot"></div>
+                        <span class="indicator-label">{{ position.title }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="voting-section">
+                {% if next_position %}
+                <h2>Vote for: <span class="position-title">{{ next_position.title }}</span></h2>
+                <div id="candidates-container" class="candidates-container">
+                    <div id="candidates-list" class="candidates-list" data-position-id="{{ next_position.id }}">
+                        <!-- Candidates will be loaded here -->
+                        <div class="loading">Loading candidates...</div>
+                    </div>
+                    <button id="submit-vote-btn" class="btn primary-btn" disabled>Submit Vote</button>
+                </div>
+                {% else %}
+                <div class="voting-complete">
+                    <h2>Thank you for voting!</h2>
+                    <p>You have successfully voted for all positions.</p>
+                    <a href="/logout/" class="btn secondary-btn">Logout</a>
+                </div>
+                {% endif %}
+                
+                <div id="voting-message" class="voting-message"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/voting.js"></script>
+</body>
+</html>
